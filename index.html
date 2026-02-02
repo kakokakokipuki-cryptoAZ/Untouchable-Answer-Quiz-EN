@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gift Card Quiz</title>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* 画面外に逃げてもスクロールさせない */
+            touch-action: none; /* iPadでのスクロールを無効化 */
+        }
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 { color: #333; font-size: 1.5rem; margin-bottom: 20px; }
+        .reward { color: #e91e63; font-weight: bold; margin-bottom: 20px; }
+        
+        .options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            position: relative;
+            height: 100px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .correct {
+            background-color: #4caf50;
+            color: white;
+            position: absolute;
+            z-index: 1000;
+            /* 物理的にクリックを無効化する防御策 */
+            pointer-events: auto;
+        }
+
+        .wrong {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .troll-tag {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            font-size: 10px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <p class="reward">🎁 正解したらAmazonギフト券1万円分！</p>
+    <h1>Q. 1 + 1 = ?</h1>
+    
+    <div class="options">
+        <button class="btn wrong" onclick="alert('はずれ！やり直し！')">3</button>
+        <button id="run-btn" class="btn correct">2</button>
+        <button class="btn wrong" onclick="alert('はずれ！やり直し！')">1</button>
+    </div>
+</div>
+
+<div class="troll-tag">THIS IS A TROLL</div>
+
+<script>
+    const btn = document.getElementById('run-btn');
+
+    // ボタンを逃がす関数
+    function moveButton(e) {
+        // 画面のサイズを取得
+        const maxX = window.innerWidth - btn.offsetWidth;
+        const maxY = window.innerHeight - btn.offsetHeight;
+
+        // ランダムな位置を計算
+        const newX = Math.random() * maxX;
+        const newY = Math.random() * maxY;
+
+        // ボタンの位置を更新
+        btn.style.position = 'fixed';
+        btn.style.left = newX + 'px';
+        btn.style.top = newY + 'px';
+        
+        // 煽りテキストをランダムに変える
+        const texts = ["2", "HAHA", "GG", "LOSER", "Bruh", "Sucker"];
+        btn.innerText = texts[Math.floor(Math.random() * texts.length)];
+    }
+
+    // Windows (マウス) 用：近づいたら逃げる
+    btn.addEventListener('mouseover', moveButton);
+
+    // iPad/スマホ (タッチ) 用：触れようとした瞬間に逃げる
+    btn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // タッチによるクリックを防止
+        moveButton();
+    });
+
+    // 万が一クリック/タップされた時の最終防御
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        moveButton();
+    });
+</script>
+
+</body>
+</html>
